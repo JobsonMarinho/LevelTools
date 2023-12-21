@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BlockEventListener extends XPListener {
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
         final Player player = e.getPlayer();
 
@@ -54,7 +54,7 @@ public class BlockEventListener extends XPListener {
         handle(LevelToolsUtil.createLevelToolsItem(hand), player, LevelToolsUtil.getBlockModifier(block.getType()));
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent e) {
         if (!LevelToolsPlugin.getInstance().getConfig().getBoolean("playerPlacedBlocks")) {
             LevelToolsPlugin.getInstance().getBlockDataManager().getDataBlockAsync(e.getBlockPlaced(), true).thenAccept(db -> db.set("level_tools", true));
