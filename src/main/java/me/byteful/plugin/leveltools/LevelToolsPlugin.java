@@ -1,5 +1,12 @@
 package me.byteful.plugin.leveltools;
 
+import static me.byteful.plugin.leveltools.util.Text.colorize;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import me.byteful.plugin.leveltools.api.AnvilCombineMode;
 import me.byteful.plugin.leveltools.listeners.AnvilListener;
 import me.byteful.plugin.leveltools.listeners.BlockEventListener;
@@ -8,16 +15,12 @@ import me.byteful.plugin.leveltools.util.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import redempt.crunch.CompiledExpression;
+import redempt.crunch.Crunch;
+import redempt.redlib.RedLib;
 import redempt.redlib.blockdata.BlockDataManager;
 import redempt.redlib.misc.Task;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public final class LevelToolsPlugin extends JavaPlugin {
     private static LevelToolsPlugin instance;
@@ -26,6 +29,7 @@ public final class LevelToolsPlugin extends JavaPlugin {
     private BukkitCommandHandler commandManager;
     private AnvilCombineMode anvilCombineMode;
     private UpdateChecker updateChecker;
+    private CompiledExpression levelXpFormula;
 
     public static LevelToolsPlugin getInstance() {
         return instance;
@@ -33,6 +37,7 @@ public final class LevelToolsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        sendStartupBanner();
         instance = this;
         updateChecker = new UpdateChecker(this);
 
@@ -40,21 +45,7 @@ public final class LevelToolsPlugin extends JavaPlugin {
             getDataFolder().mkdirs();
         }
 
-        // Support older file names.
         final Path blocksFile = getDataFolder().toPath().resolve("player_placed_blocks.db");
-        final Path oldFile = getDataFolder().toPath().resolve("blocks.db");
-        if (Files.exists(oldFile)) {
-            if (Files.exists(blocksFile)) {
-                getLogger().warning("Found old 'blocks.db' file, but ignored it because a newer 'player_placed_blocks.db' file exists!");
-            } else {
-                try {
-                    Files.move(oldFile, blocksFile, StandardCopyOption.COPY_ATTRIBUTES);
-                    getLogger().warning("Found old 'blocks.db' file... Renamed to newer 'player_placed_blocks.db' file.");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
         if (!Files.exists(blocksFile)) {
             try {
@@ -69,8 +60,9 @@ public final class LevelToolsPlugin extends JavaPlugin {
         getLogger().info("Loaded BlockDataManager...");
 
         saveDefaultConfig();
-        getConfig().options().copyDefaults();
+        getConfig().options().copyDefaults(true);
         setAnvilCombineMode();
+        setLevelXpFormula();
         getLogger().info("Loaded configuration...");
 
         if (getConfig().getBoolean("update.start")) {
@@ -110,6 +102,14 @@ public final class LevelToolsPlugin extends JavaPlugin {
         getLogger().info("Successfully stopped " + getDescription().getFullName() + ".");
     }
 
+    private void sendStartupBanner() {
+        Bukkit.getConsoleSender().sendMessage(colorize(" &b         _____"));
+        Bukkit.getConsoleSender().sendMessage(colorize(" &d|          &b|     &8Created by &2byteful"));
+        Bukkit.getConsoleSender().sendMessage(colorize(String.format(" &d|          &b|     &8Running &6%s &8on &6MC %s", getDescription().getFullName(), RedLib.getServerVersion())));
+        Bukkit.getConsoleSender().sendMessage(colorize(" &d|_____     &b|     &8Join &9&nhttps://discord.gg/G8BDgqsuyw&8 for support!"));
+        Bukkit.getConsoleSender().sendMessage("");
+    }
+
     private void registerListeners() {
         final PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new BlockEventListener(), this);
@@ -121,12 +121,20 @@ public final class LevelToolsPlugin extends JavaPlugin {
         anvilCombineMode = AnvilCombineMode.fromName(Objects.requireNonNull(getConfig().getString("anvil_combine")));
     }
 
+    public void setLevelXpFormula() {
+        levelXpFormula = Crunch.compileExpression(getConfig().getString("level_xp_formula").replace("{current_level}", "$1"));
+    }
+
     public BlockDataManager getBlockDataManager() {
         return blockDataManager;
     }
 
     public AnvilCombineMode getAnvilCombineMode() {
         return anvilCombineMode;
+    }
+
+    public CompiledExpression getLevelXpFormula() {
+        return levelXpFormula;
     }
 
     public BukkitCommandHandler getCommandManager() {
