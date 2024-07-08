@@ -12,7 +12,8 @@
 
 ## Features
 
-- Supports versions 1.8 - 1.20.
+- Supports versions 1.8 - 1.21.
+- Supports Folia
 - No dependencies.
 - Super efficient, no lag.
 - Simple developer API.
@@ -27,14 +28,11 @@
 
 ```groovy
 repositories {
-    maven {
-        name = 'byteful'
-        url = 'https://mvn.byteful.me/repository/maven-releases/'
-    }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'me.byteful.plugin:LevelTools:Tag' // Replace Tag with the version. (Ex: v1.3.6)
+    compileOnly 'com.github.byteful:LevelTools:Tag' // Replace Tag with the version. (Ex: v1.4.0)
 }
 ```
 
@@ -44,16 +42,16 @@ dependencies {
 
 <repositories>
     <repository>
-        <id>byteful</id>
-        <url>https://mvn.byteful.me/repository/maven-releases/</url>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
     </repository>
 </repositories>
 
 <dependency>
-<groupId>me.byteful.plugin</groupId>
+    <groupId>com.github.byteful</groupId>
     <artifactId>LevelTools</artifactId>
-<version>Tag</version> <!-- Replace Tag with the version. (Ex: v1.3.6) -->
-</dependency> 
+    <version>Tag</version> <!-- Replace Tag with the version. (Ex: v1.4.0) -->
+</dependency>
 ```
 
 ### Example Usage:
@@ -71,11 +69,11 @@ player.getInventory().setItemInMainHand(tool.getItemStack());
 
 @EventHandler
 public void onLevelEvent(LevelToolsLevelIncreaseEvent event) {
-    event.setNewLevel(69);
+  event.setNewLevel(69);
 }
 
 @EventHandler
 public void onXPEvent(LevelToolsXPIncreaseEvent event) {
-    event.setNewXp(420);
+  event.setNewXp(420);
 }
 ```
