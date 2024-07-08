@@ -80,11 +80,11 @@ shadowJar {
     relocate 'com.jeff_media.morepersistentdatatypes', 'me.byteful.plugin.leveltools.libs.morepersistentdatatypes'
 }
 
-def targetJavaVersion = 8
+def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = 17
-    targetCompatibility = 8
+    targetCompatibility = 17
 }
 
 tasks.withType(JavaCompile).configureEach {

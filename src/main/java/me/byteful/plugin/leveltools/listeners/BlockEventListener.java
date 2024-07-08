@@ -26,12 +26,12 @@ public class BlockEventListener extends XPListener {
   }
 
   private boolean isPPBEnabled() {
-    return !LevelToolsPlugin.getInstance().getConfig().getBoolean("playerPlacedBlocks");
+    return LevelToolsPlugin.getInstance().getConfig().getBoolean("playerPlacedBlocks");
   }
 
   @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
   public void on(BlockBreakEvent event) {
-    if (!isPPBEnabled()) return;
+    if (isPPBEnabled()) return;
 
     final Block block = event.getBlock();
     final BlockPosition pos = BlockPosition.fromBukkit(block);
@@ -40,12 +40,12 @@ public class BlockEventListener extends XPListener {
 
   @EventHandler(priority = EventPriority.LOW)
   public void on(BlockPlaceEvent event) {
-    if (!isPPBEnabled()) return;
+    if (isPPBEnabled()) return;
 
     blockDataManager.addPlacedBlock(BlockPosition.fromBukkit(event.getBlock()));
   }
 
-  @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+  @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
   public void onBlockBreak(BlockBreakEvent e) {
     final Player player = e.getPlayer();
 
@@ -69,11 +69,11 @@ public class BlockEventListener extends XPListener {
             .filter(Objects::nonNull)
             .collect(Collectors.toSet());
 
-    if (type != null && type.equalsIgnoreCase("whitelist") && !blocks.contains(block.getType())) {
+    if (type.equalsIgnoreCase("whitelist") && !blocks.contains(block.getType())) {
       return;
     }
 
-    if (type != null && type.equalsIgnoreCase("blacklist") && blocks.contains(block.getType())) {
+    if (type.equalsIgnoreCase("blacklist") && blocks.contains(block.getType())) {
       return;
     }
 
