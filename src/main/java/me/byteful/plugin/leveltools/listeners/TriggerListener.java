@@ -192,11 +192,11 @@ public final class TriggerListener implements Listener {
 
         double totalModifier = 0.0;
         for (TriggerProfile triggerProfile : triggerProfiles) {
-            if (!triggerId.equals(triggerProfile.getTriggerId())) {
+            if (!triggerId.equals(triggerProfile.triggerId())) {
                 continue;
             }
 
-            if (!triggerProfile.getSlotFilter().matches(slot)) {
+            if (!triggerProfile.slotFilter().matches(slot)) {
                 continue;
             }
 

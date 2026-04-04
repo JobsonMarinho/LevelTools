@@ -19,7 +19,7 @@ public final class LeftClickTrigger implements Trigger {
     @Override
     public boolean canHandle(@NotNull TriggerContext context) {
         TriggerProfile profile = context.getTriggerProfile();
-        TriggerSettings settings = profile.getSettings();
+        TriggerSettings settings = profile.settings();
         TriggerSettings.ClickMode clickMode = settings.getClickMode();
 
         if (clickMode == null || clickMode == TriggerSettings.ClickMode.ANY) {

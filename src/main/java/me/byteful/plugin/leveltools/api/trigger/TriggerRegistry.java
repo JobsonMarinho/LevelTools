@@ -1,13 +1,6 @@
 package me.byteful.plugin.leveltools.api.trigger;
 
-import me.byteful.plugin.leveltools.api.trigger.impl.BlockBreakTrigger;
-import me.byteful.plugin.leveltools.api.trigger.impl.ConsumeTrigger;
-import me.byteful.plugin.leveltools.api.trigger.impl.EntityKillTrigger;
-import me.byteful.plugin.leveltools.api.trigger.impl.FarmingTrigger;
-import me.byteful.plugin.leveltools.api.trigger.impl.FishingTrigger;
-import me.byteful.plugin.leveltools.api.trigger.impl.ArmorDurabilityTrigger;
-import me.byteful.plugin.leveltools.api.trigger.impl.LeftClickTrigger;
-import me.byteful.plugin.leveltools.api.trigger.impl.RightClickTrigger;
+import me.byteful.plugin.leveltools.api.trigger.impl.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +12,7 @@ public final class TriggerRegistry {
 
     public void register(@NotNull Trigger trigger) {
         String id = TriggerIds.normalize(trigger.getTriggerId());
-        if (id.isEmpty()) {
+        if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("Trigger ID cannot be null or empty");
         }
         triggers.put(id, trigger);

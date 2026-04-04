@@ -134,7 +134,7 @@ public final class ProfileManager {
 
     @NotNull
     public RegistrationResult registerTriggerProfile(@NotNull TriggerProfile profile) {
-        String id = profile.getId();
+        String id = profile.id();
         if (triggerProfiles.containsKey(id)) {
             return RegistrationResult.alreadyExists(id, "trigger");
         }

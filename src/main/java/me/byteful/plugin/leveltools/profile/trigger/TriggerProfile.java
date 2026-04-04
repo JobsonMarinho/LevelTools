@@ -3,32 +3,13 @@ package me.byteful.plugin.leveltools.profile.trigger;
 import me.byteful.plugin.leveltools.api.trigger.TriggerIds;
 import org.jetbrains.annotations.NotNull;
 
-public final class TriggerProfile {
-    private final String id;
-    private final String triggerId;
-    private final XpModifierConfig xpModifier;
-    private final TriggerFilter filter;
-    private final TriggerSlotFilter slotFilter;
-    private final TriggerSettings settings;
-
-    public TriggerProfile(
-            @NotNull String id,
-            @NotNull String triggerId,
-            @NotNull XpModifierConfig xpModifier,
-            @NotNull TriggerFilter filter,
-            @NotNull TriggerSettings settings
-    ) {
+public record TriggerProfile(String id, String triggerId, XpModifierConfig xpModifier, TriggerFilter filter,
+                             TriggerSlotFilter slotFilter, TriggerSettings settings) {
+    public TriggerProfile(@NotNull String id, @NotNull String triggerId, @NotNull XpModifierConfig xpModifier, @NotNull TriggerFilter filter, @NotNull TriggerSettings settings) {
         this(id, triggerId, xpModifier, filter, TriggerSlotFilter.all(), settings);
     }
 
-    public TriggerProfile(
-            @NotNull String id,
-            @NotNull String triggerId,
-            @NotNull XpModifierConfig xpModifier,
-            @NotNull TriggerFilter filter,
-            @NotNull TriggerSlotFilter slotFilter,
-            @NotNull TriggerSettings settings
-    ) {
+    public TriggerProfile(@NotNull String id, @NotNull String triggerId, @NotNull XpModifierConfig xpModifier, @NotNull TriggerFilter filter, @NotNull TriggerSlotFilter slotFilter, @NotNull TriggerSettings settings) {
         this.id = id;
         this.triggerId = TriggerIds.normalize(triggerId);
         this.xpModifier = xpModifier;
@@ -41,33 +22,39 @@ public final class TriggerProfile {
         return new Builder(id);
     }
 
+    @Override
     @NotNull
-    public String getId() {
+    public String id() {
         return id;
     }
 
+    @Override
     @NotNull
-    public String getTriggerId() {
+    public String triggerId() {
         return triggerId;
     }
 
+    @Override
     @NotNull
-    public XpModifierConfig getXpModifier() {
+    public XpModifierConfig xpModifier() {
         return xpModifier;
     }
 
+    @Override
     @NotNull
-    public TriggerFilter getFilter() {
+    public TriggerFilter filter() {
         return filter;
     }
 
+    @Override
     @NotNull
-    public TriggerSlotFilter getSlotFilter() {
+    public TriggerSlotFilter slotFilter() {
         return slotFilter;
     }
 
+    @Override
     @NotNull
-    public TriggerSettings getSettings() {
+    public TriggerSettings settings() {
         return settings;
     }
 
