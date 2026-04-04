@@ -19,6 +19,7 @@ import me.byteful.plugin.leveltools.profile.reward.RewardProfile;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -261,9 +262,17 @@ public final class LevelToolsUtil {
             return;
         }
 
-        final int[] bounds = findPrefixBounds(lore);
-        final int start = bounds[0];
-        final int end = bounds[1];
+        int[] bounds = findPrefixBounds(lore);
+        int start = bounds[0];
+        int end = bounds[1];
+
+        // Fallback: detect old LevelTools lore lines (without §§ prefix) by progress bar pattern
+        if (start == -1) {
+            bounds = findLegacyBounds(lore);
+            start = bounds[0];
+            end = bounds[1];
+        }
+
         if (start == -1) {
             lore.addAll(toAdd);
             meta.setLore(lore);
@@ -291,6 +300,36 @@ public final class LevelToolsUtil {
                     arr[0] = i;
                 }
 
+                arr[1] = i;
+            }
+        }
+
+        return arr;
+    }
+
+    private static int[] findLegacyBounds(@NotNull List<String> lore) {
+        final int[] arr = new int[]{-1, -1};
+        for (int i = 0; i < lore.size(); i++) {
+            final String stripped = ChatColor.stripColor(colorize(lore.get(i)));
+            if (stripped != null && stripped.matches("^\\[\\|+.*\\].*$")) {
+                // Found a progress bar line from old LevelTools format
+                // Walk backwards to find the start (skip empty lines and level label)
+                int scanStart = i;
+                for (int j = i - 1; j >= 0; j--) {
+                    String prev = ChatColor.stripColor(colorize(lore.get(j)));
+                    if (prev == null || prev.trim().isEmpty()) {
+                        scanStart = j;
+                        continue;
+                    }
+                    if (prev.matches(".*(?:Level|Nível|Nivel).*:\\s*\\d+.*")) {
+                        scanStart = j;
+                        continue;
+                    }
+                    break;
+                }
+                if (arr[0] == -1 || scanStart < arr[0]) {
+                    arr[0] = scanStart;
+                }
                 arr[1] = i;
             }
         }
