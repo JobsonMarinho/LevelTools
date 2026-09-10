@@ -1,0 +1,4 @@
+Ferramenta: image_gen nativa (OpenAI). Imagem gerada por IA.
+Uso: banner do README do LevelTools.
+
+Use case: stylized-concept. Asset type: premium panoramic 3:1 GitHub README banner. Minecraft voxel cinematic illustration for LevelTools, an item leveling plugin. Scene: enchanted workshop overlooking a mine and wheat fields, a blocky adventurer raising a glowing diamond pickaxe, floating experience orbs and ascending magical light around an anvil with a sword, axe and bow. Exact large centered title "LevelTools": Level in gold and Tools in bright silver, thick dimensional beveled Minecraft block lettering with clear dark outline, all letters fully visible and generous margins. Beautiful polished voxel architecture, rich emerald, cyan and amber lighting, vivid tool textures, atmospheric depth. Only the exact project title, no Hyped prefix, no subtitle, no numbers, no watermark, no UI.
